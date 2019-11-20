@@ -10,7 +10,7 @@ module.exports = {
       res.status(400).send({ message: "Senha inválida" });
     }
 
-    res.status(200).send({ authenticated: true });
+    res.status(200).send({ authenticated: true, user });
     try {
     } catch (error) {
       res.status(400).send(error);

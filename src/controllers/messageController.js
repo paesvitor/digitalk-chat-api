@@ -1,4 +1,5 @@
 const Message = require("../models/Message");
+const User = require("../models/User");
 
 module.exports = {
   async index(req, res) {
@@ -13,9 +14,9 @@ module.exports = {
 
   async store(req, res) {
     try {
-      const { text, user } = req.body;
+      const { text, user: user_id } = req.body;
 
-      const user = await User.findById(user);
+      const user = await User.findById(user_id);
 
       if (!user) {
         res.status(400).send({ message: "Erro, id de usuário não existe" });
