@@ -30,7 +30,6 @@ mongoose
   .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch(error => {
     console.log("error", String(error));
-    process.exit(-1);
   });
 
 app.use(cors(corsOptions));

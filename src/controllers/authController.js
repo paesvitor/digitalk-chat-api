@@ -5,23 +5,15 @@ module.exports = {
     try {
       const { username, password } = req.body;
 
-      if (!username) {
-        res.status(400).send({ message: "Preencha o usuário" });
-      }
+      !username && res.status(400).send({ message: "Preencha o usuário" });
+      !password && res.status(400).send({ message: "Preencha a senha" });
 
-      if (!password) {
-        res.status(400).send({ message: "Preencha a senha" });
-      }
+      const user = await User.findOne({ username }).select("+password");
 
-      const user = await User.findOne({ username });
+      !user && res.status(400).send({ message: "Usuário não encontrado" });
 
-      if (!user) {
-        res.status(400).send({ message: "Usuário não encontrado" });
-      }
-
-      if (user.password !== password) {
+      user.password !== password &&
         res.status(400).send({ message: "Senha inválida" });
-      }
 
       res.status(200).send({ authenticated: true, user });
     } catch (error) {
@@ -33,9 +25,8 @@ module.exports = {
     try {
       const { username, password, confirmPassword } = req.body;
 
-      if (password !== confirmPassword) {
+      password !== confirmPassword &&
         res.status(400).send({ message: "Senhas não coincidem" });
-      }
 
       const user = await User.findOne({ username });
 
@@ -45,7 +36,7 @@ module.exports = {
 
       const result = await User.create({ username, password });
 
-      res.send({ authenticated: true, result });
+      res.send({ authenticated: true, user: result });
     } catch (error) {
       res.status(400).send({ message: String(error) });
     }

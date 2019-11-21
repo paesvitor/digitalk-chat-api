@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 module.exports = {
   async index(req, res) {
-    const messages = await Message.find({});
+    const messages = await Message.find({}).populate("user");
 
     res.status(200).send(messages);
     try {
@@ -14,16 +14,16 @@ module.exports = {
 
   async store(req, res) {
     try {
-      const { text, user: user_id } = req.body;
+      const { user: user_id } = req.body;
       const { io } = req;
 
       const user = await User.findById(user_id);
 
-      if (!user) {
+      !user &&
         res.status(400).send({ message: "Erro, id de usuário não existe" });
-      }
 
-      const message = await Message.create(req.body);
+      let message = await Message.create(req.body);
+      message = await message.populate("user").execPopulate();
 
       io.emit("message", message);
 
