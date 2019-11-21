@@ -2,10 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const routes = require("./src/routes");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("root");
