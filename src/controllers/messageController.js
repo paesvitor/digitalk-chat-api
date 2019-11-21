@@ -15,6 +15,7 @@ module.exports = {
   async store(req, res) {
     try {
       const { text, user: user_id } = req.body;
+      const { io } = req;
 
       const user = await User.findById(user_id);
 
@@ -23,6 +24,8 @@ module.exports = {
       }
 
       const message = await Message.create(req.body);
+
+      io.emit("message", message);
 
       res.send(message);
     } catch (error) {
