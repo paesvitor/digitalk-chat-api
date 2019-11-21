@@ -4,7 +4,6 @@ const routes = require("./src/routes");
 const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3000;
-const HOST = "0.0.0.0";
 
 const app = express();
 
@@ -13,20 +12,20 @@ app.get("/", (req, res) => {
 });
 
 if (process.env === "development") {
-  dbUrl = "mongodb://localhost:27017/digitalk";
+  dbUrl = "mongodb://mongo/digitalk";
 } else {
-  dbUrl =
-    "mongodb+srv://admin:admin@cluster0-rlodt.mongodb.net/test?retryWrites=true&w=majority";
+  dbUrl = "mongodb://mongo/digitalk";
 }
 
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-});
+mongoose
+  .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .catch(error => {
+    console.log("error", String(error));
+    process.exit(-1);
+  });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(routes);
 
-app.listen(PORT, HOST);
+app.listen(PORT);
